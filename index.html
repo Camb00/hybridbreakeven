@@ -2,172 +2,372 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>PHEV – EV vs Petrol Break-even Calculator</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PHEV — EV vs Petrol • Break-even</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- Open Graph / Facebook / WhatsApp -->
-<meta property="og:type" content="website">
 <meta property="og:title" content="PHEV – EV vs Petrol Cost Calculator">
-<meta property="og:description" content="Compare petrol vs electric driving costs, €/100km and break-even charging price. Includes popular PHEV presets.">
+<meta property="og:description" content="Compare €/100km and find the break-even electricity price for charging. Includes common PHEV presets.">
 <meta property="og:url" content="https://flyingbirde.github.io/hybridbreakeven/">
 <meta property="og:image" content="https://flyingbirde.github.io/hybridbreakeven/preview.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:site_name" content="Hybrid Break-even Calculator">
-
-<!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PHEV – EV vs Petrol Cost Calculator">
-<meta name="twitter:description" content="Find your EV charging break-even price and €/100km comparison.">
-<meta name="twitter:image" content="https://flyingbirde.github.io/hybridbreakeven/preview.png">
 
 <style>
 :root{
-  --bg:#0b1020; --card:rgba(255,255,255,0.06); --muted:#a6acd8;
-  --text:#e9ecff; --accent1:#7cf5c2; --accent2:#6bbcff; --danger:#ff6b6b;
+  --bg-1:#04091a;
+  --bg-2:#051a1a;
+  --muted:#aab5e3;
+  --text:#f0f4ff;
+  --accent-a:#6ee7c6;
+  --accent-b:#6bbcff;
+  --danger:#ff6b6b;
+  --radius:16px;
 }
+
 *{box-sizing:border-box}
-body{
-  margin:0; min-height:100vh; font-family:Inter,system-ui,Arial,sans-serif;
-  display:flex; align-items:center; justify-content:center; padding:24px;
-  background:
-    radial-gradient(900px 500px at 10% 0%, #14204a22, transparent 40%),
-    radial-gradient(600px 400px at 100% 100%, #072f2725, transparent 30%),
-    var(--bg);
+html,body{
+  height:100%;
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+  background:linear-gradient(160deg,var(--bg-1),var(--bg-2));
   color:var(--text);
 }
+
+.wrap{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
 .card{
-  width:100%; max-width:640px; border-radius:18px; padding:26px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-  border:1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);
-  box-shadow:0 30px 80px rgba(0,0,0,0.45);
+  width:100%;
+  max-width:400px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border-radius:var(--radius);
+  padding:25px;
+  border:1px solid rgba(255,255,255,.05);
+  backdrop-filter:blur(12px) saturate(120%);
+  box-shadow:0 40px 80px rgba(2,6,23,.8);
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
-.header{display:flex; align-items:center; gap:12px;}
-.logo{
-  width:48px; height:48px; border-radius:10px;
-  background:linear-gradient(135deg,var(--accent1),var(--accent2));
-  display:flex; align-items:center; justify-content:center;
-  font-weight:800; color:#052116;
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.subtitle{color:var(--muted); font-size:13px; margin-top:6px;}
-.grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:18px;}
-.full{grid-column:1/-1}
-label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
-input, select{
-  width:100%; padding:10px 12px; border-radius:10px;
-  border:1px solid rgba(255,255,255,0.06);
-  background:rgba(0,0,0,0.35); color:var(--text);
+
+h1{
+  margin:0;
+  font-size:22px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  padding-bottom:8px;
 }
-.rangeWrap{display:flex; gap:10px; align-items:center;}
-input[type="range"]{
-  -webkit-appearance:none; appearance:none; height:8px; border-radius:999px; flex:1;
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+
+.chip{
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  font-size:12px;
+  font-weight:600;
 }
-input[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
-  background:#fff; border:2px solid var(--accent1);
+
+label{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:5px;
+  display:block;
 }
+
+input,select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.05);
+  color:var(--text);
+  font-size:16px;
+}
+
+input:focus,select:focus{
+  outline:none;
+  box-shadow:0 0 0 2px var(--accent-b);
+}
+
+.controls-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.row{margin-bottom:12px}
+
+.btn-row{
+  display:flex;
+  gap:10px;
+}
+
 button{
-  width:100%; padding:12px; margin-top:18px;
-  border-radius:12px; font-weight:700;
-  background:linear-gradient(135deg,var(--accent1),var(--accent2));
-  border:none; cursor:pointer;
+  cursor:pointer;
+  border:none;
+  border-radius:10px;
+  padding:12px 14px;
+  font-weight:700;
 }
+
+button.primary{
+  flex:1;
+  background:linear-gradient(135deg,var(--accent-a),var(--accent-b));
+  color:#052116;
+}
+
+button.ghost{
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+}
+
+.summary{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
 .result{
-  margin-top:18px; padding:16px; border-radius:12px;
-  background:rgba(0,0,0,0.36);
+  padding:18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.05);
 }
-.good{color:var(--accent1); font-weight:700}
-.bad{color:var(--danger); font-weight:700}
-@media(max-width:640px){.grid{grid-template-columns:1fr}}
+
+.line{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.iconBox{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.06);
+}
+
+.break-even-line{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px dashed rgba(255,255,255,.15);
+  text-align:center;
+}
+
+.break-even-value{
+  font-size:24px;
+  font-weight:800;
+  color:var(--accent-b);
+}
+
+.final{
+  padding:14px 18px;
+  border-radius:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:700;
+}
+
+.verdict-ev{
+  background:linear-gradient(90deg,rgba(110,231,198,.1),rgba(107,188,255,.05));
+  border:1px solid var(--accent-a);
+  color:var(--accent-a);
+}
+
+.verdict-petrol{
+  background:linear-gradient(90deg,rgba(255,107,107,.1),rgba(255,107,107,.05));
+  border:1px solid var(--danger);
+  color:var(--danger);
+}
+
+.verdict-equal{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.evGood{color:var(--accent-a)}
+.petrolBad{color:var(--danger)}
+.muted{color:var(--muted);font-size:13px}
+
+@media(max-width:500px){
+  .wrap{padding:10px}
+  .card{border-radius:0}
+}
 </style>
 </head>
 
 <body>
-<div class="card">
-  <div class="header">
-    <div class="logo">EV</div>
-    <div>
-      <h2>PHEV – EV vs Petrol</h2>
-      <div class="subtitle">Select a PHEV and calculate break-even costs</div>
-    </div>
-  </div>
+<div class="wrap">
+  <div class="card" aria-label="PHEV break-even calculator">
 
-  <div class="grid">
-    <div class="full">
-      <label>PHEV model</label>
-      <select id="phevSelect">
-        <option value="">— Select —</option>
-      </select>
+    <div class="top">
+      <h1>PHEV — EV vs Petrol</h1>
+      <div class="chip" id="lastUpdated">—</div>
     </div>
 
     <div>
-      <label>Petrol price €/L</label>
-      <div class="rangeWrap">
-        <input id="petrolPrice" type="number" step="0.01" value="2.10">
-        <input id="petrolPriceSlider" type="range" min="1" max="3.5" step="0.01" value="2.10">
+      <div class="row">
+        <label for="phev">PHEV Model</label>
+        <select id="phev"></select>
+      </div>
+
+      <div class="controls-grid">
+        <div class="row">
+          <label>Petrol Price (€ / L)</label>
+          <input id="petrolPrice" type="number" step="0.01" value="2.10">
+        </div>
+        <div class="row">
+          <label>Petrol Cons. (L / 100 km)</label>
+          <input id="petrolCons" type="number" step="0.1" value="7.0">
+        </div>
+        <div class="row">
+          <label>EV Cons. (kWh / 100 km)</label>
+          <input id="evCons" type="number" step="0.1" value="18.0">
+        </div>
+        <div class="row">
+          <label>Electricity Price (€ / kWh)</label>
+          <input id="elecPrice" type="number" step="0.01" value="0.35">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="primary" id="updateBtn">Update</button>
+        <button class="ghost" id="resetBtn">Reset</button>
       </div>
     </div>
 
-    <div>
-      <label>Petrol L/100km</label>
-      <div class="rangeWrap">
-        <input id="petrolConsumption" type="number" step="0.1" value="7">
-        <input id="petrolConsumptionSlider" type="range" min="3" max="15" step="0.1" value="7">
-      </div>
-    </div>
+    <aside class="summary">
+      <div class="result">
+        <div class="muted" style="font-weight:700;margin-bottom:12px">
+          Cost Comparison / 100 km
+        </div>
 
-    <div>
-      <label>EV kWh/100km</label>
-      <div class="rangeWrap">
-        <input id="evConsumption" type="number" step="0.1" value="18">
-        <input id="evConsumptionSlider" type="range" min="8" max="30" step="0.1" value="18">
-      </div>
-    </div>
+        <div class="line">
+          <div class="left"><span class="iconBox">⛽</span>Petrol</div>
+          <div id="petrolCost">€0.00</div>
+        </div>
 
-    <div>
-      <label>Electricity €/kWh</label>
-      <div class="rangeWrap">
-        <input id="electricityPrice" type="number" step="0.01" value="0.35">
-        <input id="electricityPriceSlider" type="range" min="0.05" max="1.5" step="0.01" value="0.35">
-      </div>
-    </div>
+        <div class="line">
+          <div class="left"><span class="iconBox">⚡</span>EV</div>
+          <div id="evCost">€0.00</div>
+        </div>
 
-    <div class="full">
-      <button id="updateBtn">Update</button>
-      <div class="result" id="result">Press Update</div>
-    </div>
+        <div class="break-even-line">
+          <div class="muted">Break-even electricity price</div>
+          <div class="break-even-value">€0.000 / kWh</div>
+        </div>
+      </div>
+
+      <div class="final verdict-equal" id="verdict">
+        <div id="verdictText">—</div>
+        <div id="verdictDelta">—</div>
+      </div>
+    </aside>
+
   </div>
 </div>
 
 <script>
 const phevList=[
-["Lynk & Co 01 PHEV",7.5,17.5],
-["Volvo XC60 PHEV",7.5,18],
-["Ford Kuga PHEV",6.8,17],
-["Mitsubishi Outlander PHEV",7,20],
-["Hyundai Tucson PHEV",6.5,16],
-["Kia Sportage PHEV",6.8,16.5],
-["BMW 330e",6,15],
-["BMW X5 xDrive45e",8.5,22],
-["Mercedes C300e",6.5,16],
-["Toyota RAV4 PHEV",6.2,18],
-["VW Golf GTE",5.9,14]
+ ["— Custom Values —",7,18],
+ ["Lynk & Co 01 PHEV",7.5,17.5],
+ ["Volvo XC60 PHEV",7.5,18],
+ ["Ford Kuga PHEV",6.8,17],
+ ["Mitsubishi Outlander PHEV",7,20],
+ ["Toyota RAV4 PHEV",6.2,18]
 ];
 
 const qs=id=>document.getElementById(id);
-const s=qs("phevSelect");
-phevList.forEach((p,i)=>s.add(new Option(p[0],i)));
+const phev=qs("phev");
+const petrolPrice=qs("petrolPrice");
+const petrolCons=qs("petrolCons");
+const evCons=qs("evCons");
+const elecPrice=qs("elecPrice");
+const petrolCost=qs("petrolCost");
+const evCost=qs("evCost");
+const verdict=qs("verdict");
+const verdictText=qs("verdictText");
+const verdictDelta=qs("verdictDelta");
+const lastUpdated=qs("lastUpdated");
+const breakEvenValue=document.querySelector(".break-even-value");
 
-s.onchange=()=>{const p=phevList[s.value];if(p){qs("petrolConsumption").value=p[1];qs("petrolConsumptionSlider").value=p[1];qs("evConsumption").value=p[2];qs("evConsumptionSlider").value=p[2];}}
+phevList.forEach((p,i)=>{
+  const o=document.createElement("option");
+  o.value=i;o.textContent=p[0];
+  phev.appendChild(o);
+});
 
-function calc(){
-const pp=+qs("petrolPrice").value, pc=+qs("petrolConsumption").value,
-ec=+qs("evConsumption").value, ep=+qs("electricityPrice").value;
-const p=pp*pc, e=ep*ec;
-qs("result").innerHTML=`Petrol €${p.toFixed(2)} /100km<br>EV €${e.toFixed(2)} /100km<br><b>Break-even €${(p/ec).toFixed(3)} /kWh</b>`;
+phev.addEventListener("change",()=>{
+  const p=phevList[phev.value];
+  petrolCons.value=p[1];
+  evCons.value=p[2];
+  calculate();
+});
+
+const toNum=v=>Number.isFinite(+v)?+v:0;
+
+function calculate(){
+  const pp=toNum(petrolPrice.value);
+  const pc=toNum(petrolCons.value);
+  const ec=toNum(evCons.value);
+  const ep=toNum(elecPrice.value);
+
+  const petrol100=pp*pc;
+  const ev100=ep*ec;
+  const diff=petrol100-ev100;
+
+  petrolCost.textContent=`€${petrol100.toFixed(2)}`;
+  evCost.textContent=`€${ev100.toFixed(2)}`;
+  breakEvenValue.textContent=`€${(petrol100/ec).toFixed(3)} / kWh`;
+
+  verdict.className="final";
+
+  if(Math.abs(diff)<0.05){
+    verdict.classList.add("verdict-equal");
+    verdictText.textContent="Costs are roughly equal";
+    verdictDelta.textContent=`Δ €${Math.abs(diff).toFixed(2)}`;
+  }else if(diff>0){
+    verdict.classList.add("verdict-ev");
+    verdictText.textContent="EV is cheaper";
+    verdictDelta.textContent=`Δ €${diff.toFixed(2)}`;
+  }else{
+    verdict.classList.add("verdict-petrol");
+    verdictText.textContent="Petrol is cheaper";
+    verdictDelta.textContent=`Δ €${Math.abs(diff).toFixed(2)}`;
+  }
+
+  lastUpdated.textContent=new Date().toLocaleTimeString();
 }
-qs("updateBtn").onclick=calc;
+
+function resetAll(){
+  petrolPrice.value=2.10;
+  petrolCons.value=7.0;
+  evCons.value=18.0;
+  elecPrice.value=0.35;
+  phev.value=0;
+  calculate();
+}
+
+qs("updateBtn").onclick=calculate;
+qs("resetBtn").onclick=resetAll;
+resetAll();
 </script>
 </body>
 </html>
